@@ -1,5 +1,17 @@
-import React from "react";
+import React, { useState } from "react";
+import { useEffect } from "react";
 import "./Home.scss";
+import axios from "axios";
+import .meta.env
+
+
+const apiKey = "6c2461dbaad5e1efeba6cd858e532574"
+const url = `https://api.themoviedb.org/3`;
+const imgUrl = "https://image.tmdb.org/t/p/original";
+const upcoming = "upcoming"
+const popular = "popular";
+const topRated = "top_rated";
+const nowPlaying = "now_playing";
 
 const Cards = ({ img }) => {
   return <img src={img} alt="cover" className="card" />;
@@ -8,9 +20,7 @@ const Cards = ({ img }) => {
 const Row = ({
   title,
   arr = [
-    {
-      img: "https://rukminim2.flixcart.com/image/850/1000/krgohow0/poster/b/h/c/large-riverdale-netflix-series-poster-riverdale-poster-tv-series-original-imag596yhrbbchsz.jpeg?q=90&crop=false",
-    },
+ 
   ],
 }) => {
   return (
@@ -18,7 +28,7 @@ const Row = ({
       <h2>{title}</h2>
       <div>
         {arr.map((item, index) => (
-          <Cards key={index} img={item.img} />
+          <Cards key={index} img={`${imgUrl}/${item.poster_path}`} />
         ))}
       </div>
     </div>
@@ -26,10 +36,26 @@ const Row = ({
 };
 
 function Home() {
+
+  let [upcomingMovies, setUpcomingMovies] = useState([]);
+  useEffect(()=>{
+    const fetchUpcomingMovies = async () => {
+      const { data: { results } } = await axios.get(
+        `${url}/movie/${upcoming}?api_key=${apiKey}`
+      );
+     setUpcomingMovies(results);
+  
+    }
+    fetchUpcomingMovies();
+  },[])
+
+  console.log(upcomingMovies);
+  
+
   return (
     <section className="home">
       <div className="banner"></div>
-      <Row title={"popular on Netflix"} />
+      <Row title={"popular on Netflix"} arr={upcomingMovies} />
       <Row title={"Movies"} />
       <Row title={"TV Shows"} />
       <Row title={"Recently Viewed"} />
