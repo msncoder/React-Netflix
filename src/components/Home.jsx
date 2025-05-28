@@ -2,8 +2,9 @@ import React, { useState } from "react";
 import { useEffect } from "react";
 import "./Home.scss";
 import axios from "axios";
-import { data, Link } from "react-router-dom";
-import.meta.env;
+import { BiPlay } from "react-icons/bi";
+import { AiOutlinePlus } from "react-icons/ai";
+import { Link } from "react-router-dom";
 
 const apiKey = "6c2461dbaad5e1efeba6cd858e532574";
 const url = `https://api.themoviedb.org/3`;
@@ -70,11 +71,7 @@ function Home() {
       const {
         data: { genres },
       } = await axios.get(`${url}/genre/movie/list?api_key=${apiKey}`);
-      console.log(data);
-
       setAllGenremovies(genres);
-
-      // console.log(results);
     };
 
     getAllGenre();
@@ -91,11 +88,23 @@ function Home() {
       <div
         className="banner"
         style={{
-          backgroundImage: popularMovies[0]
-            ? url(`${imgUrl}/${popularMovies[0].poster_path}`)
+          backgroundImage: popularMovies[3]
+            ? `url(${imgUrl}/${popularMovies[3].poster_path})`
             : "none",
         }}
-      ></div>
+      >
+        {popularMovies[3] && <h1>{popularMovies[3].original_title}</h1>}
+
+        {popularMovies[3] && <p>{popularMovies[3].overview}</p>}
+        <div>
+          <button>
+            <BiPlay /> Play
+          </button>
+          <button>
+            My List <AiOutlinePlus />
+          </button>
+        </div>
+      </div>
 
       <Row title={"Upcoming "} arr={upcomingMovies} />
       <Row title={"Popular"} arr={popularMovies} />
